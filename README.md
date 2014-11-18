@@ -1,12 +1,12 @@
 estUpload
 =========
 
-Library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
+A python library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
 
 Installation
 ------------
 
-Download the latest release from https://pypi.python.org/pypi/est_upload/1.0.0 or simply run
+Download the latest release from https://pypi.python.org/pypi/est_upload/ or simply run
 ```shell
 pip install est_upload
 ```
