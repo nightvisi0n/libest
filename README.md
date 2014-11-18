@@ -1,5 +1,5 @@
-estUpload
-=========
+est_upload
+==========
 
 A python library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
 
