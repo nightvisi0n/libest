@@ -6,8 +6,7 @@ A python library to communicate with Exercise Submission Tool (https://est.infor
 Installation
 ------------
 
-Download the latest release from https://pypi.python.org/pypi/est_upload/ or simply run
-`pip install est_upload`
+Download the latest release from https://pypi.python.org/pypi/est_upload/ or simply run `pip install est_upload`
 
 Dependencies
 ------------
