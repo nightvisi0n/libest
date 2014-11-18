@@ -1,6 +1,8 @@
 .idea/
 build/
 dist/
+est_upload.egg-info/
 *.pyc
 .directory
 MANIFEST
+README.txt

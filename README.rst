@@ -7,9 +7,7 @@ Installation
 ------------
 
 Download the latest release from https://pypi.python.org/pypi/est_upload/ or simply run
-```shell
-pip install est_upload
-```
+`pip install est_upload`
 
 Dependencies
 ------------
