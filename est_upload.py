@@ -28,7 +28,7 @@ class ESTUpload:
             return True if est_error is None else est_error.next.strip()
 
     def search_file(self, name, lecture_id):
-        est_file_id_tag = self.parse_html_text(self.s.get(self.base_url + '/encodingchecker.html?lectureId=' + lecture_id
+        est_file_id_tag = self.parse_html_text(self.s.get(self.base_url + '/encodingchecker.html?lectureId=' + str(lecture_id)
                                                           + '&action=submit&tab=upload').text, name, "label")
         if est_file_id_tag is None:
             return 2
@@ -45,7 +45,7 @@ class ESTUpload:
             return 3
 
         file = [(est_file_id, (name, open(path, 'rb'), mime_type))]
-        params = {'upload': 'upload', 'lectureId': lecture_id,
+        params = {'upload': 'upload', 'lectureId': str(lecture_id),
                   'submitterCode_' + est_file_id[:4]: submission_member_code, 'action': 'submit', 'tab': 'upload'}
         est_error = self.parse_html_id(self.s.post(self.base_url + '/encodingchecker.html', files=file, data=params)
                                        .text, 'estError')
@@ -56,7 +56,7 @@ class ESTUpload:
 
     def check_file(self, name, path, lecture_id):
         file_url = self.base_url + '/' + self.parse_html_text(self.s.get(self.base_url + '/judging.html?lectureId=' +
-                                                                         lecture_id + '&action=submit&tab=overview')
+                                                                         str(lecture_id) + '&action=submit&tab=overview')
                                                               .text, name, "td").find_next("a").get('href')
         temp_file_path = "/tmp/" + name
         self.download_file(file_url, temp_file_path)
@@ -67,7 +67,7 @@ class ESTUpload:
 
     def check_status(self, name, lecture_id):
         name_tag = self.parse_html_text(self.s.get(self.base_url + '/judging.html?lectureId=' +
-                                                   lecture_id + '&action=submit&tab=overview').text, name, "td")
+                                                   str(lecture_id) + '&action=submit&tab=overview').text, name, "td")
         if name_tag is not None:
             return name_tag.find_previous("span").get('title')
 
@@ -101,7 +101,7 @@ class ESTUpload:
         return True if __est_version__ in est_version else est_version
 
     def get_submission_with(self, group_submission_code, lecture_id):
-        return self.parse_html_text(self.s.get(self.base_url + '/submissiongroupdynamic.html?lectureId=' + lecture_id +
+        return self.parse_html_text(self.s.get(self.base_url + '/submissiongroupdynamic.html?lectureId=' + str(lecture_id) +
                                                '&action=submit&tab=overview')
                                     .text, group_submission_code, "span").previous_element
 

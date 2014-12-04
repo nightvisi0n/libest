@@ -3,6 +3,8 @@ est_upload
 
 A python library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
 
+If you are searching the console interface, look at [jneureuther/est](https://github.com/jneureuther/est).
+
 Installation
 ------------
 
