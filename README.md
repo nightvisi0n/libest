@@ -3,6 +3,8 @@ est_upload
 
 A python library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
 
+If you are searching the console interface, look at [jneureuther/est](https://github.com/jneureuther/est).
+
 Installation
 ------------
 
@@ -11,7 +13,7 @@ Download the latest release from https://pypi.python.org/pypi/est_upload/ or sim
 Dependencies
 ------------
 
-* python-requests
+* python-requests (2.3.0)
 * python-bs4
 * python-magic
 
