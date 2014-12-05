@@ -13,7 +13,7 @@ Download the latest release from https://pypi.python.org/pypi/est_upload/ or sim
 Dependencies
 ------------
 
-* python-requests
+* python-requests (2.3.0)
 * python-bs4
 * python-magic
 
