@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='libest',
-    version='1.0.5',
+    version='1.0.6',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     url='https://github.com/jneureuther/libest',
     license='CC BY-SA 4.0',
