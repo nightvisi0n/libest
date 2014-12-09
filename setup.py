@@ -12,9 +12,9 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='est_upload',
-    version='1.0.4',
+    version='1.0.5',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    url='https://github.com/jneureuther/est_upload',
+    url='https://github.com/jneureuther/libest',
     license='CC BY-SA 4.0',
     author='Julian Neureuther',
     author_email='dev@jneureuther.de',
