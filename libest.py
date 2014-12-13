@@ -12,7 +12,7 @@ import magic
 from collections import OrderedDict
 
 
-class ESTUpload:
+class libest:
 
     def __init__(self):
         self.s = requests.session()

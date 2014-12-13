@@ -1,5 +1,5 @@
-est_upload
-==========
+libest
+======
 
 A python library to communicate with Exercise Submission Tool (https://est.informatik.uni-erlangen.de).
 
@@ -8,7 +8,7 @@ If you are searching the console interface, look at [jneureuther/est](https://gi
 Installation
 ------------
 
-Download the latest release from https://pypi.python.org/pypi/est_upload/ or simply run `pip install est_upload`
+Download the latest release from https://pypi.python.org/pypi/libest/ or simply run `pip install libest`
 
 Dependencies
 ------------
