@@ -39,7 +39,7 @@ class libest:
             return est_file_id_tag['for']
 
     # submits a file to est
-    def submit_file(self, name, path, lecture_id, submission_member_code):
+    def submit_file(self, name, path, lecture_id, submission_member_code=""):
         est_file_id = self.search_file(name, lecture_id)
         if est_file_id is 2:
             return 2
@@ -50,7 +50,8 @@ class libest:
 
         loc_file = [(est_file_id, (name, open(path, 'rb'), mime_type))]
         params = {'upload': 'upload', 'lectureId': str(lecture_id),
-                  'submitterCode_' + est_file_id[:4]: submission_member_code, 'action': 'submit', 'tab': 'upload'}
+                  'submitterCode_' + est_file_id[:4]: submission_member_code,
+                  'action': 'submit', 'tab': 'upload'}
         est_error = self.parse_html_id(self.s.post(self.base_url + '/encodingchecker.html', files=loc_file, data=params)
                                        .text, 'estError')
         if est_error is None:
