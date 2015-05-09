@@ -1,8 +1,9 @@
 .idea/
 build/
 dist/
-est_upload.egg-info/
+libest.egg-info/
 *.pyc
 .directory
-MANIFEST
-README.txt
+MANIFEST.in
+#kde temp-files
+*~
