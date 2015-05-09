@@ -2,7 +2,7 @@
 
 __author__ = 'jneureuther'
 __license__ = 'CC BY-SA 4.0'
-__version__ = '1.0'
+__version__ = '1.1.0'
 __est_version__ = 'Version 2.0.2384'
 
 import filecmp
