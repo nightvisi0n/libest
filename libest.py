@@ -3,7 +3,7 @@
 __author__ = 'jneureuther'
 __license__ = 'CC BY-SA 4.0'
 __version__ = '1.0'
-__est_version__ = 'Version 2.0.2360'
+__est_version__ = 'Version 2.0.2384'
 
 import filecmp
 import requests
@@ -13,10 +13,15 @@ from collections import OrderedDict
 
 
 class libest:
-
     def __init__(self):
         self.s = requests.session()
-        self.base_url = 'https://est.informatik.uni-erlangen.de'
+        self.est_urls = dict()
+        self.est_urls['base'] = 'https://est.informatik.uni-erlangen.de'
+        self.est_urls['login'] = self.est_urls['base'] + '/login.html?action=student'
+        self.est_urls['upload'] = self.est_urls['base'] + '/exercise.html'
+        self.est_urls['upload_view'] = self.est_urls['upload'] + '?lectureId={lec_id}&action=submit&tab=upload'
+        self.est_urls['check'] = self.est_urls['base'] + '/judging.html?lectureId={lec_id}&action=submit&tab=overview'
+        self.est_urls['group'] = self.est_urls['base'] + '/submissiongroupdynamic.html?lectureId={lec_id}&action=submit&tab=overview'
 
     def __del__(self):
         self.s.close()
@@ -24,15 +29,15 @@ class libest:
     # login to est
     # returns True if successfully logged in
     def authenticate(self, user, passwd):
-            params = {'login': user, 'password': passwd, 'submit': 'login'}
-            est_error = self.parse_html_id(self.s.post(self.base_url + '/login.html?action=student',
-                                                       params=params).text, 'estError')
-            return True if est_error is None else est_error.next.strip()
+        params = {'login': user, 'password': passwd, 'submit': 'login'}
+        est_error = self.parse_html_id(self.s.post(self.est_urls['login'],
+                                                   params=params).text, 'estError')
+        return True if est_error is None else est_error.next.strip()
 
     # returns the file id of the file name. If it not exists, it returns 2
     def search_file(self, file_name, lecture_id):
-        est_file_id_tag = self.parse_html_text(self.s.get(self.base_url + '/encodingchecker.html?lectureId='
-                                                                        + str(lecture_id) + '&action=submit&tab=upload').text, file_name, "label")
+        est_file_id_tag = self.parse_html_text(self.s.get(
+            self.est_urls['upload_view'].format(lec_id=lecture_id)).text, file_name, "label")
         if est_file_id_tag is None:
             return 2
         else:
@@ -52,7 +57,7 @@ class libest:
         params = {'upload': 'upload', 'lectureId': str(lecture_id),
                   'submitterCode_' + est_file_id[:4]: submission_member_code,
                   'action': 'submit', 'tab': 'upload'}
-        est_error = self.parse_html_id(self.s.post(self.base_url + '/encodingchecker.html', files=loc_file, data=params)
+        est_error = self.parse_html_id(self.s.post(self.est_urls['upload_view'], files=loc_file, data=params)
                                        .text, 'estError')
         if est_error is None:
             return 1
@@ -61,9 +66,8 @@ class libest:
 
     # checks, if the given file is the same like in est
     def check_file(self, name, path, lecture_id):
-        file_url = self.base_url + '/' + self.parse_html_text(self.s.get(self.base_url + '/judging.html?lectureId=' +
-                                                                         str(lecture_id) + '&action=submit&tab=overview')
-                                                              .text, name, "td").find_next("a").get('href')
+        file_url = self.est_urls['base'] + '/' + self.parse_html_text(self.s.get(
+            self.est_urls['check'].format(lec_id=lecture_id)).text, name, "td").find_next("a").get('href')
         temp_file_path = "/tmp/" + name
         self.download_file(file_url, temp_file_path)
         if filecmp.cmp(path, temp_file_path, shallow=False):
@@ -73,8 +77,8 @@ class libest:
 
     # returns the status of a file on est
     def check_status(self, name, lecture_id):
-        name_tag = self.parse_html_text(self.s.get(self.base_url + '/judging.html?lectureId=' +
-                                                   str(lecture_id) + '&action=submit&tab=overview').text, name, "td")
+        name_tag = self.parse_html_text(self.s.get(
+            self.est_urls['check'].format(lec_id=lecture_id)).text, name, "td")
         if name_tag is not None:
             return name_tag.find_previous("span").get('title')
 
@@ -93,7 +97,7 @@ class libest:
     # returns the lecture ids of the logged in person
     def get_lecture_ids(self):
         ids = []
-        for a in self.parse_html_id(self.s.get(self.base_url).text, 'estContent').find_all_next("a"):
+        for a in self.parse_html_id(self.s.get(self.est_urls['base']).text, 'estContent').find_all_next("a"):
             if 'index.html?lectureId' in a['href']:
                 ids.append(a['href'].split('=')[1].split('&')[0])
                 ids.append(a.next.strip())
@@ -102,7 +106,7 @@ class libest:
     # returns the current est version
     def get_est_version(self):
         try:
-            return self.parse_html_id(self.s.get(self.base_url).text, 'footermenu').find_next("li").text
+            return self.parse_html_id(self.s.get(self.est_urls['base']).text, 'footermenu').find_next("li").text
         except requests.exceptions.ConnectionError:
             return '-1'
 
@@ -113,18 +117,18 @@ class libest:
 
     # returns the name of the group submission partner
     def get_submission_with(self, group_submission_code, lecture_id):
-        return self.parse_html_text(self.s.get(self.base_url + '/submissiongroupdynamic.html?lectureId='
-                                               + str(lecture_id) + '&action=submit&tab=overview').text,
+        return self.parse_html_text(self.s.get(
+            self.est_urls['group'].format(lec_id=lecture_id)).text,
                                     group_submission_code, "span").previous_element[:-2].strip()
 
     # returns the name of the group submission partner
     def get_group_submission_code(self, file_name, lecture_id):
-        element = self.parse_html_text(self.s.get(self.base_url + '/submissiongroupdynamic.html?lectureId='
-                                            + str(lecture_id) + '&action=submit&tab=overview').text, file_name, 'td')
+        element = self.parse_html_text(self.s.get(
+            self.est_urls['group'].format(lec_id=lecture_id)).text, file_name, 'td')
         if element is None:
             return ''
-        while not 'submissionGroupDynamicCode' in str(element):
-            if not element.next_element is None:
+        while 'submissionGroupDynamicCode' not in str(element):
+            if element.next_element is not None:
                 element = element.next_element
             else:
                 return ''
